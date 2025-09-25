@@ -4,9 +4,10 @@ from datetime import datetime
 from .config import Config
 
 class Database:
-    def __init__(self):
+    def __init__(self, auto_init=False):
         self.db_path = Config.DATABASE_PATH
-        self.init_database()
+        if auto_init:
+            self.init_database()
     
     def get_connection(self):
         return sqlite3.connect(self.db_path)
@@ -22,6 +23,8 @@ class Database:
             password TEXT NOT NULL,
             name TEXT NOT NULL,
             avatar TEXT,
+            phone TEXT,
+            role TEXT DEFAULT 'user',
             theme TEXT DEFAULT 'dark',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )''')
@@ -88,17 +91,17 @@ class Database:
         conn.close()
     
     def _create_demo_data(self, cursor):
-        # Demo users
+        # Demo users with roles
         demo_users = [
-            ('admin@fun.com', 'admin123', 'Admin User', None),
-            ('user@fun.com', 'user123', 'Regular User', None)
+            ('admin@admin.com', 'admin123', 'Admin User', None, 'admin', '+84123456789'),
+            ('user@fun.com', 'user123', 'Regular User', None, 'user', '+84987654321')
         ]
         
-        for email, password, name, avatar in demo_users:
+        for email, password, name, avatar, role, phone in demo_users:
             hashed_pw = hashlib.sha256(password.encode()).hexdigest()
             cursor.execute('''INSERT OR IGNORE INTO users 
-                            (email, password, name, avatar) VALUES (?, ?, ?, ?)''', 
-                         (email, hashed_pw, name, avatar))
+                            (email, password, name, avatar, role, phone) VALUES (?, ?, ?, ?, ?, ?)''', 
+                         (email, hashed_pw, name, avatar, role, phone))
     
     # User methods
     def create_user(self, email, password, name):

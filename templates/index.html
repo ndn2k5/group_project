@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* DataForSEO-inspired Landing Design */
         * {
             margin: 0;
             padding: 0;
@@ -50,13 +49,220 @@
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
             align-items: center;
-            z-index: 1;
             position: relative;
+            z-index: 2;
         }
 
-        .hero-content h1 {
-            font-size: 3.5rem;
+        .hero-content {
+            color: white;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #64B5F6;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #64B5F6 50%, #1976D2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: #B0BEC5;
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        /* Login Form */
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: #B0BEC5;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #64B5F6;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #1976D2 0%, #64B5F6 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(25, 118, 210, 0.4);
+        }
+
+        .login-footer {
+            text-align: center;
+            color: #B0BEC5;
+            font-size: 0.875rem;
+        }
+
+        .login-footer a {
+            color: #64B5F6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .demo-accounts {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .demo-title {
+            color: #64B5F6;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .demo-account {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .demo-account:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #64B5F6;
+        }
+
+        .demo-role {
+            color: #64B5F6;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .demo-email {
+            color: #B0BEC5;
+            font-size: 0.875rem;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #81C784;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #E57373;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .login-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
             margin-bottom: 1.5rem;
             background: linear-gradient(135deg, #00d4aa, #007acc);
             -webkit-background-clip: text;
@@ -301,100 +507,133 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="nav-container">
-            <div class="nav-logo">🚀 Fun Work Hub</div>
-            <ul class="nav-links">
-                <li><a href="#features">Tính năng</a></li>
-                <li><a href="#pricing">Giá cả</a></li>
-                <li><a href="#about">Về chúng tôi</a></li>
-                <li><a href="#contact">Liên hệ</a></li>
-            </ul>
-            <div class="nav-actions">
-                <a href="{{ url_for('auth.signin') }}" class="btn btn-secondary">Đăng nhập</a>
-                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">Đăng ký</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
+    <div class="hero">
         <div class="hero-container">
+            <!-- Hero Content -->
             <div class="hero-content">
-                <h1>Workspace thông minh cho hiệu suất tối đa</h1>
-                <p>
-                    Quản lý công việc với hệ thống phân lớp rõ ràng, workspace linh hoạt và 
-                    kênh liên kết mạnh mẽ. Tăng năng suất làm việc nhóm lên 300%.
+                <div class="hero-badge">
+                    <i class="fas fa-rocket"></i>
+                    <span>Thế hệ workspace mới</span>
+                </div>
+                
+                <h1 class="hero-title">Fun Work Hub</h1>
+                
+                <p class="hero-description">
+                    Nền tảng workspace thông minh giúp bạn quản lý công việc, tự động hóa quy trình và cộng tác hiệu quả. 
+                    Trải nghiệm làm việc mới với AI và automation.
                 </p>
-                
-                <div class="hero-actions">
-                    <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">
-                        <i class="fas fa-rocket"></i>
-                        Bắt đầu miễn phí
-                    </a>
-                    <a href="#demo" class="btn btn-secondary">
-                        <i class="fas fa-play"></i>
-                        Xem demo
-                    </a>
-                </div>
-                
-                <div class="hero-features">
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-layer-group"></i>
-                        </div>
-                        <span>Workspace phân lớp</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-network-wired"></i>
-                        </div>
-                        <span>Kênh liên kết thông minh</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-theater-masks"></i>
-                        </div>
-                        <span>Scenarios linh hoạt</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <span>Hợp tác realtime</span>
-                    </div>
-                </div>
             </div>
-            
-            <div class="hero-visual">
-                <div class="visual-container">
-                    <div class="visual-header">
-                        <div class="visual-dots">
-                            <div class="visual-dot dot-red"></div>
-                            <div class="visual-dot dot-yellow"></div>
-                            <div class="visual-dot dot-green"></div>
-                        </div>
-                        <div class="visual-title">Fun Work Hub</div>
-                    </div>
-                    <div class="visual-content">
-                        <div class="visual-sidebar">
-                            <div style="background: #007acc; height: 20px; border-radius: 4px; margin-bottom: 8px;"></div>
-                            <div style="background: #28a745; height: 15px; border-radius: 4px; margin-bottom: 8px;"></div>
-                            <div style="background: #ffc107; height: 15px; border-radius: 4px; margin-bottom: 8px;"></div>
-                            <div style="background: #dc3545; height: 15px; border-radius: 4px;"></div>
-                        </div>
-                        <div class="visual-main">
-                            <div class="visual-logo">🚀</div>
-                            <div style="color: #cccccc; font-size: 0.9rem;">
-                                Workspace của bạn<br>
-                                <span style="color: #00d4aa;">sẵn sàng hoạt động</span>
+
+            <!-- Login Form -->
+            <div class="login-card">
+                <div class="login-header">
+                    <h2 class="login-title">Đăng nhập</h2>
+                    <p class="login-subtitle">Chào mừng trở lại với Fun Work Hub</p>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+                                {{ message }}
                             </div>
-                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form action="/auth/signin" method="POST" id="loginForm">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="Nhập email của bạn" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Mật khẩu</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Nhập mật khẩu" required>
+                    </div>
+
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Đăng nhập
+                    </button>
+                </form>
+
+                <div class="login-footer">
+                    Chưa có tài khoản? <a href="/register">Đăng ký ngay</a>
+                </div>
+
+                <!-- Demo Accounts -->
+                <div class="demo-accounts">
+                    <div class="demo-title">
+                        <i class="fas fa-key"></i>
+                        Tài khoản demo
+                    </div>
+                    
+                    <div class="demo-account" onclick="fillDemoAccount('admin@fun.com', 'admin123')">
+                        <div class="demo-role">👑 Admin</div>
+                        <div class="demo-email">admin@fun.com</div>
+                    </div>
+                    
+                    <div class="demo-account" onclick="fillDemoAccount('user@fun.com', 'user123')">
+                        <div class="demo-role">👤 User</div>
+                        <div class="demo-email">user@fun.com</div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
+    <script>
+        function fillDemoAccount(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            
+            // Add visual feedback
+            const inputs = document.querySelectorAll('.form-input');
+            inputs.forEach(input => {
+                input.style.borderColor = '#64B5F6';
+                input.style.background = 'rgba(100, 181, 246, 0.1)';
+                
+                setTimeout(() => {
+                    input.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    input.style.background = 'rgba(255, 255, 255, 0.1)';
+                }, 1000);
+            });
+        }
+
+        // Auto-submit demo accounts after a short delay
+        document.querySelectorAll('.demo-account').forEach(account => {
+            account.addEventListener('click', function() {
+                setTimeout(() => {
+                    document.getElementById('loginForm').submit();
+                }, 500);
+            });
+        });
+
+        // Form validation
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                e.preventDefault();
+                alert('Vui lòng nhập đầy đủ email và mật khẩu');
+            }
+        });
+
+        // Add loading state to login button
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            const btn = document.querySelector('.login-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đăng nhập...';
+            btn.disabled = true;
+
+            // Reset after 5 seconds if form doesn't redirect
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 5000);
+        });
+    </script>
 </body>
 </html>

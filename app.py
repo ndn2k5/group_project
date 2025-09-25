@@ -7,8 +7,8 @@ from core.utils import Utils
 import os
 import json
 
-# Update template folder to use ui/templates
-app = Flask(__name__, template_folder='ui/templates')
+# Update template folder to use templates
+app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your-secret-key-here'
 
 # Initialize Flask-Login
@@ -24,17 +24,19 @@ config = Config()
 utils = Utils()
 
 class User(UserMixin):
-    def __init__(self, id, email, first_name, last_name):
+    def __init__(self, id, email, first_name, last_name, role='user'):
         self.id = id
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
+        self.role = role
 
 @login_manager.user_loader
 def load_user(user_id):
     user_data = auth_manager.get_user_by_id(int(user_id))
     if user_data:
-        return User(user_data['id'], user_data['email'], user_data['first_name'], user_data['last_name'])
+        return User(user_data['id'], user_data['email'], user_data['first_name'], 
+                   user_data['last_name'], user_data.get('role', 'user'))
     return None
 
 # Auth Blueprint
@@ -49,10 +51,16 @@ def signin():
         
         user_data = auth_manager.verify_user(email, password)
         if user_data:
-            user = User(user_data['id'], user_data['email'], user_data['first_name'], user_data['last_name'])
+            user = User(user_data['id'], user_data['email'], user_data['first_name'], 
+                       user_data['last_name'], user_data.get('role', 'user'))
             login_user(user)
             flash('Đăng nhập thành công!', 'success')
-            return redirect(url_for('workspace'))
+            
+            # Redirect based on role
+            if user.role == 'admin':
+                return redirect(url_for('workspace_old'))
+            else:
+                return redirect(url_for('workspace'))
         else:
             flash('Email hoặc mật khẩu không đúng!', 'error')
     
@@ -65,8 +73,9 @@ def signup():
         password = request.form['password']
         first_name = request.form['first_name']
         last_name = request.form['last_name']
+        phone = request.form.get('phone', '')
         
-        success, message = auth_manager.register_user(email, password, first_name, last_name)
+        success, message = auth_manager.register_user(email, password, first_name, last_name, phone)
         if success:
             flash('Đăng ký thành công! Vui lòng đăng nhập.', 'success')
             return redirect(url_for('auth.signin'))
@@ -88,13 +97,60 @@ app.register_blueprint(auth_bp, url_prefix='/auth')
 @app.route('/')
 def index():
     if current_user.is_authenticated:
+        # Check user role and redirect accordingly
+        user_data = auth_manager.get_user_by_id(current_user.id)
+        if user_data and user_data.get('role') == 'admin':
+            return redirect(url_for('workspace_old'))  # Admin goes to workspace_old
+        else:
+            return redirect(url_for('workspace'))  # Regular user goes to workspace
+    return render_template('index.html')  # Show login page
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        phone = request.form.get('phone', '')
+        
+        # Register as regular user (not admin)
+        success, message = auth_manager.register_user(email, password, first_name, last_name, phone)
+        if success:
+            flash('Đăng ký thành công! Vui lòng đăng nhập.', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash(message, 'error')
+    
+    return render_template('register.html')
+
+@app.route('/workspace_old')
+@login_required
+def workspace_old():
+    # Only admin can access this page
+    user_data = auth_manager.get_user_by_id(current_user.id)
+    if not user_data or user_data.get('role') != 'admin':
+        flash('Bạn không có quyền truy cập trang này', 'error')
         return redirect(url_for('workspace'))
-    return redirect(url_for('auth.signin'))
+    return render_template('workspace_old.html', user=current_user)
+
+@app.route('/admin')
+@login_required
+def admin_dashboard():
+    # Check admin permission
+    if not hasattr(current_user, 'role') or current_user.role != 'admin':
+        flash('Bạn không có quyền truy cập trang này', 'error')
+        return redirect(url_for('workspace'))
+    return render_template('admin_dashboard.html', user=current_user)
 
 @app.route('/workspace')
 @login_required
 def workspace():
-    return render_template('workspace.html', user=current_user)
+    # Redirect admin users to admin dashboard (workspace_old)
+    user_data = auth_manager.get_user_by_id(current_user.id)
+    if user_data and user_data.get('role') == 'admin':
+        return redirect(url_for('workspace_old'))
+    return render_template('user_dashboard.html', user=current_user)  # Regular users see user dashboard
 
 @app.route('/scenarios')
 @login_required
@@ -289,6 +345,59 @@ def logout():
     logout_user()
     flash('You have been logged out successfully.', 'info')
     return redirect(url_for('auth.signin'))
+
+# Admin API Routes
+@app.route('/api/admin/users')
+@login_required
+def admin_get_users():
+    """Get all users for admin dashboard"""
+    if not hasattr(current_user, 'role') or current_user.role != 'admin':
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+    
+    conn = db_manager.get_connection()
+    c = conn.cursor()
+    c.execute('''SELECT id, email, name, role, created_at FROM users ORDER BY created_at DESC''')
+    users = c.fetchall()
+    conn.close()
+    
+    return jsonify([{
+        'id': user[0],
+        'email': user[1],
+        'name': user[2],
+        'role': user[3],
+        'created_at': user[4]
+    } for user in users])
+
+@app.route('/api/admin/stats')
+@login_required
+def admin_get_stats():
+    """Get system statistics for admin dashboard"""
+    if not hasattr(current_user, 'role') or current_user.role != 'admin':
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+    
+    conn = db_manager.get_connection()
+    c = conn.cursor()
+    
+    # Get user count
+    c.execute('SELECT COUNT(*) FROM users')
+    user_count = c.fetchone()[0]
+    
+    # Get workspace count
+    c.execute('SELECT COUNT(*) FROM workspaces')
+    workspace_count = c.fetchone()[0]
+    
+    # Get task count
+    c.execute('SELECT COUNT(*) FROM items')
+    task_count = c.fetchone()[0]
+    
+    conn.close()
+    
+    return jsonify({
+        'users': user_count,
+        'workspaces': workspace_count,
+        'tasks': task_count,
+        'uptime': '99.8%'  # Mock data
+    })
 
 if __name__ == '__main__':
     db_manager.init_database()

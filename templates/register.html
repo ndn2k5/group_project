@@ -1,0 +1,438 @@
+{% extends "base.html" %}
+
+{% block title %}Đăng ký tài khoản - Fun Work Hub{% endblock %}
+
+{% block styles %}
+<style>
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .register-container {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 100%;
+        max-width: 480px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .register-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .register-logo {
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+        font-size: 24px;
+        color: white;
+    }
+
+    .register-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 8px;
+    }
+
+    .register-subtitle {
+        font-size: 16px;
+        color: #7f8c8d;
+        margin-bottom: 24px;
+    }
+
+    .register-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 16px;
+    }
+
+    .form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 14px;
+    }
+
+    .form-input {
+        padding: 14px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-input:invalid {
+        border-color: #e74c3c;
+    }
+
+    .register-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 16px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 8px;
+    }
+
+    .register-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .register-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 24px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #e9ecef;
+    }
+
+    .divider-text {
+        padding: 0 16px;
+        color: #7f8c8d;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .login-link {
+        text-align: center;
+        font-size: 14px;
+        color: #7f8c8d;
+    }
+
+    .login-link a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .alert-error {
+        background: #fee;
+        color: #e74c3c;
+        border: 1px solid #f8d7da;
+    }
+
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .password-requirements {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        padding: 12px;
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 8px;
+    }
+
+    .password-requirements ul {
+        margin: 8px 0 0;
+        padding-left: 16px;
+    }
+
+    .password-requirements li {
+        margin-bottom: 4px;
+    }
+
+    .strength-meter {
+        height: 4px;
+        background: #e9ecef;
+        border-radius: 2px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+
+    .strength-meter-fill {
+        height: 100%;
+        transition: all 0.3s ease;
+        border-radius: 2px;
+    }
+
+    .strength-weak { background: #e74c3c; width: 25%; }
+    .strength-fair { background: #f39c12; width: 50%; }
+    .strength-good { background: #f1c40f; width: 75%; }
+    .strength-strong { background: #27ae60; width: 100%; }
+
+    /* Responsive */
+    @media (max-width: 576px) {
+        .register-container {
+            margin: 16px;
+            padding: 32px 24px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .register-title {
+            font-size: 24px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-header">
+        <div class="register-logo">
+            <i class="fas fa-rocket"></i>
+        </div>
+        <h1 class="register-title">Tạo tài khoản mới</h1>
+        <p class="register-subtitle">Tham gia Fun Work Hub để tận hưởng trải nghiệm làm việc thú vị!</p>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ error }}
+    </div>
+    {% endif %}
+
+    {% if success %}
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        {{ success }}
+    </div>
+    {% endif %}
+
+    <form method="POST" class="register-form" id="registerForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="firstName" class="form-label">Họ *</label>
+                <input type="text" id="firstName" name="first_name" class="form-input" 
+                       value="{{ request.form.get('first_name', '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName" class="form-label">Tên *</label>
+                <input type="text" id="lastName" name="last_name" class="form-input" 
+                       value="{{ request.form.get('last_name', '') }}" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="form-label">Email *</label>
+            <input type="email" id="email" name="email" class="form-input" 
+                   value="{{ request.form.get('email', '') }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone" class="form-label">Số điện thoại</label>
+            <input type="tel" id="phone" name="phone" class="form-input" 
+                   value="{{ request.form.get('phone', '') }}" placeholder="0123456789">
+        </div>
+
+        <div class="form-group">
+            <label for="password" class="form-label">Mật khẩu *</label>
+            <input type="password" id="password" name="password" class="form-input" 
+                   minlength="8" required>
+            <div class="strength-meter">
+                <div class="strength-meter-fill" id="strengthMeter"></div>
+            </div>
+            <div class="password-requirements">
+                <strong>Yêu cầu mật khẩu:</strong>
+                <ul>
+                    <li>Tối thiểu 8 ký tự</li>
+                    <li>Ít nhất 1 chữ hoa</li>
+                    <li>Ít nhất 1 chữ số</li>
+                    <li>Ít nhất 1 ký tự đặc biệt</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword" class="form-label">Xác nhận mật khẩu *</label>
+            <input type="password" id="confirmPassword" name="confirm_password" class="form-input" 
+                   minlength="8" required>
+        </div>
+
+        <button type="submit" class="register-button" id="submitButton">
+            <i class="fas fa-user-plus"></i>
+            Đăng ký tài khoản
+        </button>
+    </form>
+
+    <div class="divider">
+        <span class="divider-text">hoặc</span>
+    </div>
+
+    <div class="login-link">
+        Đã có tài khoản? <a href="/">Đăng nhập ngay</a>
+    </div>
+</div>
+
+<script>
+// Password strength checker
+function checkPasswordStrength(password) {
+    let score = 0;
+    
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+    
+    return score;
+}
+
+// Update password strength meter
+document.getElementById('password').addEventListener('input', function() {
+    const password = this.value;
+    const strengthMeter = document.getElementById('strengthMeter');
+    const score = checkPasswordStrength(password);
+    
+    // Clear all classes
+    strengthMeter.className = 'strength-meter-fill';
+    
+    // Add appropriate class based on score
+    switch(score) {
+        case 1:
+            strengthMeter.classList.add('strength-weak');
+            break;
+        case 2:
+            strengthMeter.classList.add('strength-fair');
+            break;
+        case 3:
+            strengthMeter.classList.add('strength-good');
+            break;
+        case 4:
+            strengthMeter.classList.add('strength-strong');
+            break;
+        default:
+            strengthMeter.style.width = '0%';
+    }
+});
+
+// Form validation
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const submitButton = document.getElementById('submitButton');
+    
+    // Check password match
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        alert('Mật khẩu xác nhận không khớp!');
+        return;
+    }
+    
+    // Check password strength
+    if (checkPasswordStrength(password) < 3) {
+        e.preventDefault();
+        alert('Mật khẩu không đủ mạnh! Vui lòng đáp ứng ít nhất 3/4 yêu cầu.');
+        return;
+    }
+    
+    // Disable submit button to prevent double submission
+    submitButton.disabled = true;
+    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+});
+
+// Real-time password confirmation check
+document.getElementById('confirmPassword').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = this.value;
+    
+    if (confirmPassword && password !== confirmPassword) {
+        this.style.borderColor = '#e74c3c';
+    } else {
+        this.style.borderColor = '#e9ecef';
+    }
+});
+
+// Input validation styling
+document.querySelectorAll('.form-input').forEach(input => {
+    input.addEventListener('blur', function() {
+        if (this.hasAttribute('required') && !this.value) {
+            this.style.borderColor = '#e74c3c';
+        } else if (this.type === 'email' && this.value && !this.validity.valid) {
+            this.style.borderColor = '#e74c3c';
+        } else {
+            this.style.borderColor = '#e9ecef';
+        }
+    });
+    
+    input.addEventListener('focus', function() {
+        this.style.borderColor = '#667eea';
+    });
+});
+</script>
+{% endblock %}

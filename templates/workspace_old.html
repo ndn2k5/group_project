@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitCrypto Admin Dashboard - Fun Work Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .admin-container {
+            display: flex;
+            height: 100vh;
+            background: #f5f7fa;
+        }
+
+        /* Admin Sidebar - BitCrypto Style */
+        .admin-sidebar {
+            width: 240px;
+            background: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .admin-sidebar-header {
+            padding: 25px 20px;
+            background: #2c3e50;
+            color: white;
+            border-bottom: 1px solid #34495e;
+        }
+
+        .admin-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #4a90e2;
+        }
+
+        .admin-title i {
+            font-size: 20px;
+        }
+
+        .admin-subtitle {
+            font-size: 13px;
+            color: #bdc3c7;
+            font-weight: 500;
+        }
+
+        .admin-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            background: #34495e;
+            color: white;
+            text-decoration: none;
+            transform: translateX(2px);
+        }
+
+        .menu-item.active {
+            background: #34495e;
+            color: white;
+            border-left-color: #4a90e2;
+        }
+
+        .menu-item-icon {
+            margin-right: 15px;
+            font-size: 16px;
+            width: 18px;
+            text-align: center;
+        }
+
+        .menu-item-text {
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .admin-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .admin-header {
+            height: 80px;
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 35px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .admin-header-left h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .admin-header-subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .admin-header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 35px;
+        }
+
+        .header-stat {
+            text-align: center;
+        }
+
+        .header-stat-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .header-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1;
+        }
+
+        .header-stat-chart {
+            width: 45px;
+            height: 24px;
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            border-radius: 3px;
+            margin-top: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-stat-chart::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .user-menu:hover {
+            background: #f8f9fa;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4a90e2, #357abd);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 3px 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+
+        .user-role {
+            color: #7f8c8d;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Content Area */
+        .admin-content {
+            flex: 1;
+            padding: 35px;
+            overflow-y: auto;
+            background: #f5f7fa;
+        }
+
+        /* Top Action Bar */
+        .content-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .action-tabs {
+            display: flex;
+            gap: 35px;
+        }
+
+        .action-tab {
+            color: #7f8c8d;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .action-tab.active,
+        .action-tab:hover {
+            color: #4a90e2;
+            border-bottom-color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #4a90e2;
+            color: white;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #357abd;
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #7f8c8d;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+            color: #2c3e50;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        /* Stats Grid - BitCrypto Style */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 30px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .stat-card:nth-child(1) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card:nth-child(2) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .stat-card:nth-child(3) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .stat-card:nth-child(4) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .stat-card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .stat-title {
+            font-size: 15px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .stat-icon {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .stat-change i {
+            font-size: 12px;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 35px;
+        }
+
+        /* Chart Section */
+        .chart-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .chart-subtitle {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .chart-value {
+            text-align: right;
+        }
+
+        .chart-main-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1;
+        }
+
+        .chart-sub-value {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .chart-tab {
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .chart-tab.active {
+            background: #4a90e2;
+            color: white;
+            box-shadow: 0 3px 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .chart-tab:not(.active) {
+            background: #f8f9fa;
+            color: #7f8c8d;
+        }
+
+        .chart-tab:not(.active):hover {
+            background: #e9ecef;
+            color: #2c3e50;
+        }
+
+        .chart-placeholder {
+            height: 320px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65%;
+            background: linear-gradient(45deg, #4a90e2 0%, #667eea 50%, #764ba2 100%);
+            opacity: 0.4;
+            clip-path: polygon(0% 100%, 0% 80%, 10% 75%, 20% 85%, 30% 70%, 40% 78%, 50% 65%, 60% 72%, 70% 60%, 80% 68%, 90% 55%, 100% 62%, 100% 100%);
+            animation: chartPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes chartPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Portfolio Section */
+        .portfolio-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .portfolio-header {
+            margin-bottom: 25px;
+        }
+
+        .portfolio-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .portfolio-balance {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .portfolio-subtitle {
+            font-size: 13px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .portfolio-items {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .portfolio-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #f1f3f4;
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-item:last-child {
+            border-bottom: none;
+        }
+
+        .portfolio-item:hover {
+            transform: translateX(5px);
+        }
+
+        .portfolio-item-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .portfolio-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .portfolio-icon.bitcoin {
+            background: #f7931a;
+        }
+
+        .portfolio-icon.ethereum {
+            background: #627eea;
+        }
+
+        .portfolio-icon.ripple {
+            background: #23292f;
+        }
+
+        .portfolio-icon.litecoin {
+            background: #345d9d;
+        }
+
+        .portfolio-item-info h4 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .portfolio-item-info span {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .portfolio-item-right {
+            text-align: right;
+        }
+
+        .portfolio-amount {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .portfolio-value {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        /* Exchange Section */
+        .exchange-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 25px;
+        }
+
+        .exchange-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f1f3f4;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item:hover {
+            transform: translateX(5px);
+        }
+
+        .activity-info h4 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .activity-info span {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .activity-amount {
+            font-size: 15px;
+            font-weight: 700;
+            color: #27ae60;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-stats {
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 70px;
+            }
+            
+            .admin-sidebar-header .admin-subtitle,
+            .menu-item-text {
+                display: none;
+            }
+            
+            .admin-title {
+                justify-content: center;
+            }
+            
+            .menu-item {
+                justify-content: center;
+                padding: 15px 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .header-stats {
+                display: none;
+            }
+            
+            .admin-content {
+                padding: 20px;
+            }
+            
+            .user-info {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Admin Sidebar -->
+        <div class="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-title">
+                    <i class="fas fa-gem"></i>
+                    <span>BitCrypto</span>
+                </div>
+                <div class="admin-subtitle">Dashboard Management</div>
+            </div>
+            
+            <div class="admin-menu">
+                <a href="#" class="menu-item active" data-section="dashboard">
+                    <i class="fas fa-th-large menu-item-icon"></i>
+                    <span class="menu-item-text">Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-section="wallet">
+                    <i class="fas fa-wallet menu-item-icon"></i>
+                    <span class="menu-item-text">Crypto Wallet</span>
+                </a>
+                <a href="#" class="menu-item" data-section="buy-sell">
+                    <i class="fas fa-exchange-alt menu-item-icon"></i>
+                    <span class="menu-item-text">Buy & Sell</span>
+                </a>
+                <a href="#" class="menu-item" data-section="trader">
+                    <i class="fas fa-user-tie menu-item-icon"></i>
+                    <span class="menu-item-text">Trader Profile</span>
+                </a>
+                <a href="#" class="menu-item" data-section="stats">
+                    <i class="fas fa-chart-bar menu-item-icon"></i>
+                    <span class="menu-item-text">Crypto Stats</span>
+                </a>
+                <a href="#" class="menu-item" data-section="transactions">
+                    <i class="fas fa-list menu-item-icon"></i>
+                    <span class="menu-item-text">Transactions</span>
+                </a>
+                <a href="#" class="menu-item" data-section="tickers">
+                    <i class="fas fa-chart-line menu-item-icon"></i>
+                    <span class="menu-item-text">Tickers</span>
+                </a>
+                <a href="#" class="menu-item" data-section="apps">
+                    <i class="fas fa-th menu-item-icon"></i>
+                    <span class="menu-item-text">Apps</span>
+                </a>
+                <a href="#" class="menu-item" data-section="pages">
+                    <i class="fas fa-file menu-item-icon"></i>
+                    <span class="menu-item-text">Pages</span>
+                </a>
+                <a href="#" class="menu-item" data-section="general">
+                    <i class="fas fa-cog menu-item-icon"></i>
+                    <span class="menu-item-text">General</span>
+                </a>
+                <a href="#" class="menu-item" data-section="mail">
+                    <i class="fas fa-envelope menu-item-icon"></i>
+                    <span class="menu-item-text">Mail Box</span>
+                </a>
+                <a href="#" class="menu-item" data-section="icons">
+                    <i class="fas fa-icons menu-item-icon"></i>
+                    <span class="menu-item-text">Icons</span>
+                </a>
+                <a href="#" class="menu-item" data-section="ui">
+                    <i class="fas fa-layer-group menu-item-icon"></i>
+                    <span class="menu-item-text">UI Elements</span>
+                </a>
+                <a href="#" class="menu-item" data-section="forms">
+                    <i class="fas fa-edit menu-item-icon"></i>
+                    <span class="menu-item-text">Forms</span>
+                </a>
+                <a href="#" class="menu-item" data-section="widgets">
+                    <i class="fas fa-cube menu-item-icon"></i>
+                    <span class="menu-item-text">Widgets</span>
+                </a>
+                <a href="#" class="menu-item" data-section="table">
+                    <i class="fas fa-table menu-item-icon"></i>
+                    <span class="menu-item-text">Table</span>
+                </a>
+                <a href="#" class="menu-item" data-section="charts">
+                    <i class="fas fa-chart-pie menu-item-icon"></i>
+                    <span class="menu-item-text">Charts</span>
+                </a>
+                <a href="#" class="menu-item" data-section="maps">
+                    <i class="fas fa-map menu-item-icon"></i>
+                    <span class="menu-item-text">Maps</span>
+                </a>
+                <a href="/auth/logout" class="menu-item" style="margin-top: 20px; border-top: 1px solid #34495e; padding-top: 20px;">
+                    <i class="fas fa-sign-out-alt menu-item-icon"></i>
+                    <span class="menu-item-text">Đăng xuất</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Header -->
+            <div class="admin-header">
+                <div class="admin-header-left">
+                    <h1>Dashboard</h1>
+                    <div class="admin-header-subtitle">Crypto Dashboard Management System</div>
+                </div>
+                
+                <div class="admin-header-right">
+                    <div class="header-stats">
+                        <div class="header-stat">
+                            <div class="header-stat-label">Purchase</div>
+                            <div class="header-stat-value">6,250</div>
+                            <div class="header-stat-chart"></div>
+                        </div>
+                        <div class="header-stat">
+                            <div class="header-stat-label">Profit</div>
+                            <div class="header-stat-value">$ 55,250</div>
+                            <div class="header-stat-chart"></div>
+                        </div>
+                        <div class="header-stat">
+                            <div class="header-stat-label">Market</div>
+                            <div class="header-stat-value">$ 451.60M</div>
+                            <div class="header-stat-chart"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-avatar">
+                            {% if user %}
+                                {{ (user.first_name[0] + user.last_name[0]) if user.last_name else user.first_name[0:2] }}
+                            {% else %}
+                                AD
+                            {% endif %}
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">
+                                {% if user %}
+                                    {{ user.first_name }} {{ user.last_name }}
+                                {% else %}
+                                    Admin User
+                                {% endif %}
+                            </div>
+                            <div class="user-role">
+                                {% if user %}
+                                    {{ user.role|title }}
+                                {% else %}
+                                    Administrator
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="admin-content">
+                <!-- Action Bar -->
+                <div class="content-actions">
+                    <div class="action-tabs">
+                        <a href="#" class="action-tab active">Analytics</a>
+                        <a href="#" class="action-tab">Cryptocurrency</a>
+                        <a href="#" class="action-tab">Campaign</a>
+                        <a href="#" class="action-tab">More</a>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-tasks"></i>
+                            ToDo
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-content">
+                            <div class="stat-header">
+                                <div class="stat-title">Total Income</div>
+                                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                            </div>
+                            <div class="stat-value">$14,025</div>
+                            <div class="stat-change">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>3.7% This year</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-content">
+                            <div class="stat-header">
+                                <div class="stat-title">Sessions</div>
+                                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                            </div>
+                            <div class="stat-value">1,205</div>
+                            <div class="stat-change">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>12.5% This month</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-content">
+                            <div class="stat-header">
+                                <div class="stat-title">Total Orders</div>
+                                <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+                            </div>
+                            <div class="stat-value">7,550</div>
+                            <div class="stat-change">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>2.1% This week</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-content">
+                            <div class="stat-header">
+                                <div class="stat-title">Total Profit</div>
+                                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                            </div>
+                            <div class="stat-value">$95,500</div>
+                            <div class="stat-change">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>8.2% This month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Grid -->
+                <div class="content-grid">
+                    <!-- Chart Section -->
+                    <div class="chart-section">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">Revenue Analytics</div>
+                                <div class="chart-subtitle">Monthly revenue tracking</div>
+                            </div>
+                            <div class="chart-value">
+                                <div class="chart-main-value">$125,650</div>
+                                <div class="chart-sub-value">+15.3% vs last month</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-tabs">
+                            <button class="chart-tab active">Daily</button>
+                            <button class="chart-tab">Weekly</button>
+                            <button class="chart-tab">Monthly</button>
+                            <button class="chart-tab">Yearly</button>
+                        </div>
+                        
+                        <div class="chart-placeholder">
+                            <div class="chart-line"></div>
+                            <div style="position: relative; z-index: 3; font-size: 14px; color: #7f8c8d; font-weight: 600;">
+                                📈 Interactive Chart Area
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Portfolio Section -->
+                    <div style="display: flex; flex-direction: column; gap: 25px;">
+                        <div class="portfolio-section">
+                            <div class="portfolio-header">
+                                <div class="portfolio-title">Crypto Portfolio</div>
+                                <div class="portfolio-balance">$32,450.80</div>
+                                <div class="portfolio-subtitle">Total crypto holdings</div>
+                            </div>
+                            
+                            <div class="portfolio-items">
+                                <div class="portfolio-item">
+                                    <div class="portfolio-item-left">
+                                        <div class="portfolio-icon bitcoin">₿</div>
+                                        <div class="portfolio-item-info">
+                                            <h4>Bitcoin</h4>
+                                            <span>BTC</span>
+                                        </div>
+                                    </div>
+                                    <div class="portfolio-item-right">
+                                        <div class="portfolio-amount">0.245 BTC</div>
+                                        <div class="portfolio-value">$15,680</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="portfolio-item">
+                                    <div class="portfolio-item-left">
+                                        <div class="portfolio-icon ethereum">Ξ</div>
+                                        <div class="portfolio-item-info">
+                                            <h4>Ethereum</h4>
+                                            <span>ETH</span>
+                                        </div>
+                                    </div>
+                                    <div class="portfolio-item-right">
+                                        <div class="portfolio-amount">4.25 ETH</div>
+                                        <div class="portfolio-value">$12,450</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="portfolio-item">
+                                    <div class="portfolio-item-left">
+                                        <div class="portfolio-icon ripple">XRP</div>
+                                        <div class="portfolio-item-info">
+                                            <h4>Ripple</h4>
+                                            <span>XRP</span>
+                                        </div>
+                                    </div>
+                                    <div class="portfolio-item-right">
+                                        <div class="portfolio-amount">1,250 XRP</div>
+                                        <div class="portfolio-value">$2,850</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="portfolio-item">
+                                    <div class="portfolio-item-left">
+                                        <div class="portfolio-icon litecoin">Ł</div>
+                                        <div class="portfolio-item-info">
+                                            <h4>Litecoin</h4>
+                                            <span>LTC</span>
+                                        </div>
+                                    </div>
+                                    <div class="portfolio-item-right">
+                                        <div class="portfolio-amount">15.5 LTC</div>
+                                        <div class="portfolio-value">$1,470</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Exchange Activity -->
+                        <div class="exchange-section">
+                            <div class="exchange-title">Recent Activity</div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-info">
+                                    <h4>Bitcoin Purchase</h4>
+                                    <span>2 hours ago</span>
+                                </div>
+                                <div class="activity-amount">+$2,450</div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-info">
+                                    <h4>Ethereum Sale</h4>
+                                    <span>5 hours ago</span>
+                                </div>
+                                <div class="activity-amount">+$1,850</div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-info">
+                                    <h4>XRP Exchange</h4>
+                                    <span>1 day ago</span>
+                                </div>
+                                <div class="activity-amount">+$750</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menu interactions
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (this.getAttribute('href') !== '/auth/logout') {
+                    e.preventDefault();
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Action tab interactions
+        document.querySelectorAll('.action-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.action-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Chart tab interactions
+        document.querySelectorAll('.chart-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Add some animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card, .chart-section, .portfolio-section, .exchange-section');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
